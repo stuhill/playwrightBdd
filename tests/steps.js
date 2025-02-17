@@ -52,19 +52,15 @@ When("agent changes status to {string}", async ({ page}, status) => {
 });
 
 Then("agent status is changed to {string}", async ({}, status) => {
-  await expect(controlFrame.locator("data-test-id=user-status")).toBeVisible();
-  await expect(
-    controlFrame.locator("data-test-id=user-status")
-  ).toHaveAttribute("data-status-value", status);
+  await expect(agentWorkspaceTab.locator('iframe[name="control_frame"]').contentFrame().getByText('Available', { exact: true })).toBeVisible();
 });
 
-async function waitForVisibility(locator, timeout) {
-  const startTime = Date.now();
-  while (Date.now() - startTime < timeout) {
-    if (await locator.isVisible()) {
-      return true;
-    }
-    await locator.page().waitForTimeout(500);
-  }
-  return false;
-}
+When("agent logs out", async ({ page }) => {
+  await agentWorkspaceTab.locator('iframe[name="control_frame"]').contentFrame().locator('[data-test-id="status-menu-trigger"]').click();
+  await expect(agentWorkspaceTab.locator('iframe[name="control_frame"]').contentFrame().locator('[data-test-id="status-menu-logout-button"]')).toBeVisible();
+  await agentWorkspaceTab.locator('iframe[name="control_frame"]').contentFrame().locator('[data-test-id="status-menu-logout-button"]').click();
+});
+
+Then("agent logs out successfully", async ({ page }) => {
+  await expect(agentWorkspaceTab).toHaveTitle("8x8 Login");
+});

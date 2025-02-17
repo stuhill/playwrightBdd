@@ -8,4 +8,6 @@ Feature: AGUI
         When agent selects "Contact Center Agent Workspace" tile
         Then agent navigates to Agent Workspace
         When agent changes status to "Available"
-        #Then agent status is changed to "Available"
+        Then agent status is changed to "Available"
+        When agent logs out
+        Then agent logs out successfully
